@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "module": "CommonJS", // or "ESNext" if you're using ES modules
+    "esModuleInterop": true,
+    "target": "ES2020",
+    "rootDir": "src",
+    "outDir": "dist"
+  },
+  "include": ["src"]
+}
