@@ -63,7 +63,7 @@ require('dotenv').config();
             }
         } else {
             await duplicatePersonModal.closeDuplicatePersonModal();
-            logger.info(`No duplicate found hence approving record with MIS ID: ${misID}`);
+            logger.info(`Duplicate found hence skipping approving record with MIS ID: ${misID}`);
         }
     }
     await dashboardPage.logout();
