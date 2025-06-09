@@ -23,8 +23,8 @@ export class LoginPage {
     async LoginWithBapsSSO() {
         const userName = process.env.USERNAME;
         const password = process.env.PASSWORD;
-        await this.loginWithBapsSSOUserName.fill("yateshpatil@gmail.com");
-        await this.loginWithBapsSSOPassword.fill("Getgc@22");
+        await this.loginWithBapsSSOUserName.fill(process.env.USERNAME);
+        await this.loginWithBapsSSOPassword.fill(process.env.PASSWORD);
         await this.signInBtn.click();
     }
 

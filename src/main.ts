@@ -5,9 +5,11 @@ import {DuplicatePersonModal} from "./pom/duplicate-person.modal";
 import {EditPersonModal} from "./pom/edit-person.modal";
 import { chromium} from "@playwright/test"
 
+require('dotenv').config();
+
 
 (async () => {
-    const browser = await chromium.launch( { headless: !process.env.CI });
+    const browser = await chromium.launch( { headless: true });
     const page = await browser.newPage();
     await page.goto('https://mis.na.baps.org/');
     const logInPage = new LoginPage(page);

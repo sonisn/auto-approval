@@ -17,6 +17,7 @@
     "start": "ts-node src/main.ts"
   },
   "dependencies": {
+    "dotenv": "^16.5.0",
     "playwright": "^1.52.0"
   }
 }
