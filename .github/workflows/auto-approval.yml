@@ -2,7 +2,7 @@ name: Playwright Tests
 on:
   schedule:
     - cron: '0 0 1 * *'
-  workflow_dispatch: 
+  workflow_dispatch:
 jobs:
   test:
     timeout-minutes: 60
@@ -18,3 +18,5 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright Script
       run: npm run start
+      with:
+        CI: true
