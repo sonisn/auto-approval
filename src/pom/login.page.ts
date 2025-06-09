@@ -31,6 +31,10 @@ export class LoginPage {
         // Store Username and Password in GitHub Action Secret and Read to here to user for login.
         const userName = process.env.USERNAME;
         const password = process.env.PASSWORD;
+        // Check they're enabled for interactions.
+        await this.loginWithBapsSSOUserName.isEnabled();
+        await this.loginWithBapsSSOPassword.isEnabled();
+        await this.signInBtn.isEnabled();
         await this.loginWithBapsSSOUserName.fill(userName);
         await this.loginWithBapsSSOPassword.fill(password);
         await this.signInBtn.click();
