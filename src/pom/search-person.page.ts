@@ -11,7 +11,9 @@ enum SearchResultColumns {
     ACTION = 6
 }
 
-
+/*
+    Represents Search functionality on Search Person Page.
+ */
 export class SearchPersonPage {
     private readonly page: Page;
     private readonly personStatusList: Locator;

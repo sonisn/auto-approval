@@ -1,6 +1,8 @@
 import {Locator, Page} from "@playwright/test";
 
-
+/*
+    Represents the Dashboard Page of MIS application.
+ */
 export class DashboardPage {
     private readonly page: Page;
     private readonly menuItem: Locator;

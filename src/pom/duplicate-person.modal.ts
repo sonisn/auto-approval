@@ -1,6 +1,8 @@
 import {Locator, Page} from "@playwright/test";
 
-
+/*
+    Represents Duplicate Person Modal Window when navigated from Search Result.
+ */
 export class DuplicatePersonModal {
     private readonly page: Page;
     private readonly tableFirstRowContent: Locator;

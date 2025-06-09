@@ -1,6 +1,9 @@
 import {Locator, Page} from "@playwright/test";
 
 
+/*
+    Represents Login Page.
+ */
 export class LoginPage {
     page: Page
     private readonly loginWithBapsSSOBtn: Locator;
@@ -18,12 +21,14 @@ export class LoginPage {
 
     async NavigateToLoginPage() {
         await this.loginWithBapsSSOBtn.click();
+        // Wait for the login page to fully load.
         await this.page.waitForLoadState("load");
         await this.page.waitForLoadState("networkidle");
         await this.page.waitForLoadState("domcontentloaded");
     }
 
     async LoginWithBapsSSO() {
+        // Store Username and Password in GitHub Action Secret and Read to here to user for login.
         const userName = process.env.USERNAME;
         const password = process.env.PASSWORD;
         await this.loginWithBapsSSOUserName.fill(userName);

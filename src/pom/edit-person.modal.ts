@@ -1,6 +1,8 @@
 import {Locator, Page} from "@playwright/test";
 
-
+/*
+    Represents Edit Person Modal Window when navigated from Search Result.
+ */
 export class EditPersonModal {
     private readonly page: Page;
     private readonly closeBtn: Locator;

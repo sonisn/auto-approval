@@ -7,8 +7,16 @@ import {EditPersonModal} from "@pom/edit-person.modal";
 import { chromium} from "@playwright/test"
 import logger from "./misc";
 
+// Load .env file for Local Run
 require('dotenv').config();
 
+
+/*
+    Starting point for the Script, as we use playwright API not as a test, launch browser using API.
+    This script is specially purposed to Auto Approve all the records passed from an Accounting team.
+    If a record is pending for approval, and a duplicate record is found or no edit permission, skips those records
+    and update the clean records.
+ */
 
 (async () => {
     const browser = await chromium.launch( { headless: true });
