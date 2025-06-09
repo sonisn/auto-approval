@@ -18,5 +18,5 @@ jobs:
       run: npx playwright install --with-deps
     - name: Run Playwright Script
       run: npm run start
-      with:
+      env:
         CI: true
