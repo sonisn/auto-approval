@@ -20,5 +20,3 @@ jobs:
       run: npm run start
       env:
         CI: true
-        USERNAME: ${{ secrets.USERNAME }}
-        PASSWORD: ${{ secrets.PASSWORD }}
