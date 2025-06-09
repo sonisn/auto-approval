@@ -18,13 +18,16 @@ export class LoginPage {
 
     async NavigateToLoginPage() {
         await this.loginWithBapsSSOBtn.click();
+        await this.page.waitForLoadState("load");
+        await this.page.waitForLoadState("networkidle");
+        await this.page.waitForLoadState("domcontentloaded");
     }
 
     async LoginWithBapsSSO() {
         const userName = process.env.USERNAME;
         const password = process.env.PASSWORD;
-        await this.loginWithBapsSSOUserName.fill(process.env.USERNAME);
-        await this.loginWithBapsSSOPassword.fill(process.env.PASSWORD);
+        await this.loginWithBapsSSOUserName.fill(userName);
+        await this.loginWithBapsSSOPassword.fill(password);
         await this.signInBtn.click();
     }
 
