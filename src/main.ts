@@ -33,6 +33,7 @@ require('dotenv').config();
     await searchPersonPage.clickSearch();
     await searchPersonPage.selectMaxRecords();
     const totalRecords = await searchPersonPage.getNumberOfRecords();
+    logger.info(`Total Records to be processed: ${totalRecords}`);
 
     for (let rowNumber = 1; rowNumber <= totalRecords; rowNumber++) {
         const misID = await searchPersonPage.resultTable.locator(searchPersonPage.resultRowLocator.replace('{rowNumber}', rowNumber.toString()))
