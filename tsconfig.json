@@ -4,7 +4,11 @@
     "esModuleInterop": true,
     "target": "ES2020",
     "rootDir": "src",
-    "outDir": "dist"
+    "outDir": "dist",
+   "paths": {
+      "@pom/*": ["src/pom/*"],
+      "@src/*": ["src/*"]
+    }
   },
-  "include": ["src"]
+  "include": ["src"],
 }

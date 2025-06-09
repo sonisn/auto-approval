@@ -1,9 +1,11 @@
-import {LoginPage} from "./pom/login.page";
-import {DashboardPage} from "./pom/dashboard.page";
-import {SearchPersonPage} from "./pom/search-person.page";
-import {DuplicatePersonModal} from "./pom/duplicate-person.modal";
-import {EditPersonModal} from "./pom/edit-person.modal";
+import "tsconfig-paths";
+import {LoginPage} from "@pom/login.page";
+import {DashboardPage} from "@pom/dashboard.page";
+import {SearchPersonPage} from "@pom/search-person.page";
+import {DuplicatePersonModal} from "@pom/duplicate-person.modal";
+import {EditPersonModal} from "@pom/edit-person.modal";
 import { chromium} from "@playwright/test"
+import logger from "./misc";
 
 require('dotenv').config();
 
@@ -34,17 +36,17 @@ require('dotenv').config();
         const lastName = await searchPersonPage.resultTable.locator(searchPersonPage.resultRowLocator.replace('{rowNumber}', rowNumber.toString()))
         .locator(searchPersonPage.lastNameColumnLocator)
         .innerText();
-        console.log(`Working on Mis ID: ${misID}, First Name: ${firstName}, Last Name: ${lastName}`);
+        logger.info(`Working on MIS ID: ${misID}, First Name: ${firstName}, Last Name: ${lastName}`);
         await searchPersonPage.clickDuplicatePerson(rowNumber);
         const duplicatePersonModal = new DuplicatePersonModal(page);
         if (await duplicatePersonModal.hasNoDataDisplayed()) {
-            console.log(`No duplicate found hence approving record with MIS ID: ${misID}`);
+            logger.info(`No duplicate found hence approving record with MIS ID: ${misID}`);
             await duplicatePersonModal.closeDuplicatePersonModal();
             await searchPersonPage.clickEditPerson(rowNumber);
             const editPersonModal = new EditPersonModal(page);
             if (await editPersonModal.noEditPermissionDisplayed()) {
                 await editPersonModal.closeEditPersonModal();
-                console.log(`Person with MIS ID: ${misID} can't approve as it has no edit permission.`);
+                logger.info(`Person with MIS ID: ${misID} can't approve as it has no edit permission.`);
             } else {
                 await editPersonModal.clickApprove();
                 await editPersonModal.savePerson();
@@ -52,7 +54,7 @@ require('dotenv').config();
             }
         } else {
             await duplicatePersonModal.closeDuplicatePersonModal();
-            console.log(`Person with MIS ID: ${misID} can't approve as it has duplicate.`)
+            logger.info(`No duplicate found hence approving record with MIS ID: ${misID}`);
         }
     }
     await dashboardPage.logout();
