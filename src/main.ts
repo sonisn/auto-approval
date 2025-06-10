@@ -20,6 +20,7 @@ require("dotenv").config();
 (async () => {
   const browser = await chromium.launch({ headless: true });
   const page = await browser.newPage();
+  let totalRecordsApproved = 0;
   try {
     await page.goto("https://mis.na.baps.org/");
     const logInPage = new LoginPage(page);
@@ -84,6 +85,7 @@ require("dotenv").config();
           await editPersonModal.clickApprove();
           await editPersonModal.savePerson();
           await editPersonModal.closeEditPersonModal();
+          totalRecordsApproved++;
         }
       } else {
         await duplicatePersonModal.closeDuplicatePersonModal();
@@ -93,6 +95,10 @@ require("dotenv").config();
       }
     }
     await dashboardPage.logout();
+    logger.info(`Total Records Approved: ${totalRecordsApproved}`);
+    logger.info(
+      `Total Records Skipped: ${totalRecords - totalRecordsApproved}`
+    );
   } catch (error) {
     logger.error(`Error: ${error}`);
     await page.screenshot({ path: "screenshots/error.png" });
