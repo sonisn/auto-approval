@@ -101,6 +101,7 @@ require("dotenv").config();
     );
   } catch (error) {
     logger.error(`Error: ${error}`);
+    logger.debug("Taking screenshot of the error");
     await page.screenshot({ path: "screenshots/error.png" });
   } finally {
     await browser.close();
