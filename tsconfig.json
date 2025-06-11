@@ -5,10 +5,12 @@
     "target": "ES2020",
     "rootDir": "src",
     "outDir": "dist",
-   "paths": {
-      "@pom/*": ["src/pom/*"],
-      "@src/*": ["src/*"]
+    "baseUrl": ".",
+    "paths": {
+      "@pom/*": ["./src/pom/*"],
+      "@src/*": ["./src/*"],
+      "@data/*": ["./src/data/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src"]
 }
