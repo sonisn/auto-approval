@@ -20,6 +20,8 @@ export class LoginPage {
     }
 
     async NavigateToLoginPage() {
+        await this.loginWithBapsSSOBtn.waitFor({ state: "visible" });
+        await this.loginWithBapsSSOBtn.isEnabled();
         await this.loginWithBapsSSOBtn.click();
         // Wait for the login page to fully load.
         await this.page.waitForLoadState("load");
