@@ -48,7 +48,14 @@ export class LoginPage {
         await this.signInBtn.isEnabled();
         await this.loginWithBapsSSOUserName.fill(userName);
         await this.loginWithBapsSSOPassword.fill(password);
-        await this.signInBtn.click();
+        
+        // Use click with noWaitAfter to prevent hanging on navigation
+        await this.signInBtn.click({ noWaitAfter: true });
+        
+        // Now wait for the navigation to complete manually
+        await this.page.waitForLoadState("load", { timeout: 60_000 });
+        await this.page.waitForLoadState("networkidle", { timeout: 60_000 });
+        await this.page.waitForLoadState("domcontentloaded", { timeout: 60_000 });
     }
 
 }
