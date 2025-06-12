@@ -17,7 +17,12 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright Script
-        run: npm run start
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 30
+          max_attempts: 3
+          retry_wait_seconds: 120
+          command: npm run start
         env:
           CI: true
           USERNAME: ${{ secrets.USERNAME }}
