@@ -22,10 +22,10 @@ export class DuplicatePersonModal {
     await this.page.waitForLoadState("load");
     await this.page.waitForLoadState("networkidle");
     await this.page.waitForLoadState("domcontentloaded");
-    await this.page.waitForTimeout(5000);
     if ((await this.tableFirstRowContent.count()) === 1) {
       return (
-        (await this.tableFirstRowContent.textContent()) === "No data to display"
+        (await this.tableFirstRowContent.textContent({ timeout: 20_000 })) ===
+        "No data to display"
       );
     } else if ((await this.tableFirstRowContent.count()) === 5) {
       return false;
