@@ -58,7 +58,7 @@ export class DuplicatePersonModal {
 
         return false;
       },
-      { timeout: 30000 }
+      { polling: 2_000, timeout: 30000 }
     );
 
     // Now check the actual state
