@@ -67,35 +67,31 @@ require("dotenv").config();
       logger.info(
         `Working on MIS ID: ${misID}, First Name: ${firstName}, Last Name: ${lastName}`
       );
-      try {
-        await searchPersonPage.clickDuplicatePerson(rowNumber);
-        const duplicatePersonModal = new DuplicatePersonModal(page);
-        if (await duplicatePersonModal.hasNoDataDisplayed()) {
+      await searchPersonPage.clickDuplicatePerson(rowNumber);
+      const duplicatePersonModal = new DuplicatePersonModal(page);
+      if (await duplicatePersonModal.hasNoDataDisplayed()) {
+        logger.info(
+          `No duplicate found hence approving record with MIS ID: ${misID}`
+        );
+        await duplicatePersonModal.closeDuplicatePersonModal();
+        await searchPersonPage.clickEditPerson(rowNumber);
+        const editPersonModal = new EditPersonModal(page);
+        if (await editPersonModal.noEditPermissionDisplayed()) {
+          await editPersonModal.closeEditPersonModal();
           logger.info(
-            `No duplicate found hence approving record with MIS ID: ${misID}`
+            `Person with MIS ID: ${misID} can't approve as it has no edit permission.`
           );
-          await duplicatePersonModal.closeDuplicatePersonModal();
-          await searchPersonPage.clickEditPerson(rowNumber);
-          const editPersonModal = new EditPersonModal(page);
-          if (await editPersonModal.noEditPermissionDisplayed()) {
-            await editPersonModal.closeEditPersonModal();
-            logger.info(
-              `Person with MIS ID: ${misID} can't approve as it has no edit permission.`
-            );
-          } else {
-            await editPersonModal.clickApprove();
-            await editPersonModal.savePerson();
-            await editPersonModal.closeEditPersonModal();
-            totalRecordsApproved++;
-          }
         } else {
-          await duplicatePersonModal.closeDuplicatePersonModal();
-          logger.info(
-            `Duplicate found hence skipping approving record with MIS ID: ${misID}`
-          );
+          await editPersonModal.clickApprove();
+          await editPersonModal.savePerson();
+          await editPersonModal.closeEditPersonModal();
+          totalRecordsApproved++;
         }
-      } catch (error) {
-        logger.error(`Error: ${error}`);
+      } else {
+        await duplicatePersonModal.closeDuplicatePersonModal();
+        logger.info(
+          `Duplicate found hence skipping approving record with MIS ID: ${misID}`
+        );
       }
     }
     await dashboardPage.logout();
