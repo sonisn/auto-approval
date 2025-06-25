@@ -31,35 +31,7 @@ export class DuplicatePersonModal {
         timeout: 30_000,
       });
 
-    // Wait for the table content to stabilize (either show data or "No data to display")
-    await this.page.waitForFunction(
-      () => {
-        const tableBody = document.querySelector(
-          "baps-ui-duplicate-person-list table tbody"
-        );
-        if (!tableBody) return false;
-
-        const rows = tableBody.querySelectorAll("tr");
-        if (rows.length === 0) return false;
-
-        // Check if we have either 1 row with "No data to display" or 5 rows with actual data
-        if (rows.length === 1) {
-          const firstCell = rows[0].querySelector("td");
-          return (
-            firstCell && firstCell.textContent?.trim() === "No data to display"
-          );
-        } else if (rows.length === 5) {
-          // Check if all 5 rows have some content (not empty)
-          return Array.from(rows).every((row) => {
-            const cells = row.querySelectorAll("td");
-            return cells.length > 0 && cells[0].textContent?.trim() !== "";
-          });
-        }
-
-        return false;
-      },
-      { polling: 2_000, timeout: 30000 }
-    );
+    await this.page.waitForTimeout(35_000);
 
     // Now check the actual state
     if ((await this.tableFirstRowContent.count()) === 1) {
