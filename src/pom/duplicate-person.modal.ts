@@ -23,19 +23,7 @@ export class DuplicatePersonModal {
     await this.page.waitForLoadState("networkidle");
     await this.page.waitForLoadState("domcontentloaded");
 
-    // Wait for the table to be present and stable
-    await this.page.waitForSelector(
-      "baps-ui-duplicate-person-list table tbody tr:first-child td",
-      {
-        state: "visible",
-        timeout: 35_000,
-      }
-    );
-    await this.tableFirstRowContent.waitFor({
-      state: "attached",
-      timeout: 35_000,
-    });
-    // await this.page.waitForTimeout(35_000);
+    await this.page.waitForTimeout(35_000);
 
     // Now check the actual state
     if ((await this.tableFirstRowContent.count()) === 1) {
