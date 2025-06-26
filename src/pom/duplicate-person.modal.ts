@@ -32,7 +32,7 @@ export class DuplicatePersonModal {
       }
     );
     await this.tableFirstRowContent.waitFor({
-      state: "visible",
+      state: "attached",
       timeout: 35_000,
     });
     // await this.page.waitForTimeout(35_000);
