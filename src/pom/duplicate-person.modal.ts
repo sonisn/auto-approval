@@ -31,6 +31,10 @@ export class DuplicatePersonModal {
         timeout: 35_000,
       }
     );
+    await this.tableFirstRowContent.waitFor({
+      state: "visible",
+      timeout: 35_000,
+    });
     // await this.page.waitForTimeout(35_000);
 
     // Now check the actual state
