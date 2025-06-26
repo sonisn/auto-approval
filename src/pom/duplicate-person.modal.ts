@@ -24,14 +24,14 @@ export class DuplicatePersonModal {
     await this.page.waitForLoadState("domcontentloaded");
 
     // Wait for the table to be present and stable
-    await this.page
-      .locator("baps-ui-duplicate-person-list table tbody")
-      .waitFor({
+    await this.page.waitForSelector(
+      "baps-ui-duplicate-person-list table tbody tr:first-child td",
+      {
         state: "visible",
-        timeout: 30_000,
-      });
-
-    await this.page.waitForTimeout(35_000);
+        timeout: 35_000,
+      }
+    );
+    // await this.page.waitForTimeout(35_000);
 
     // Now check the actual state
     if ((await this.tableFirstRowContent.count()) === 1) {
