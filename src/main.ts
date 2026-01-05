@@ -1,3 +1,7 @@
+/* 
+MIS Auto Approval
+*/
+
 import "tsconfig-paths";
 import { LoginPage } from "@pom/login.page";
 import { DashboardPage } from "@pom/dashboard.page";
