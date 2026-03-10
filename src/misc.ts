@@ -1,3 +1,6 @@
+/*
+Logger for the Auto Approval Utility
+*/
 import { createLogger, format, Logger, transports } from "winston";
 
 const logger = createLogger({
