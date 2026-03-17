@@ -1,10 +1,16 @@
+/**
+ * Duplicate Person Modal
+ *
+ * Opened from the search results to check if a pending person
+ * already exists in the system. The modal displays a table that either
+ * shows "No data to display" (1 cell) or matching duplicate rows (5 cells per row).
+ */
 import { Locator, Page } from "@playwright/test";
 
-/*
-    Represents Duplicate Person Modal Window when navigated from Search Result.
- */
 export class DuplicatePersonModal {
   private readonly page: Page;
+
+  // --- Locators ---
   private readonly tableFirstRowContent: Locator;
   private readonly closeBtn: Locator;
 
@@ -18,26 +24,45 @@ export class DuplicatePersonModal {
     );
   }
 
-  hasNoDataDisplayed = async () => {
+  // --- Actions ---
+
+  /**
+   * Checks whether the duplicate table shows "No data to display".
+   *
+   * Waits for the modal content to fully load (including a fixed timeout to
+   * allow the server-side duplicate search to complete), then inspects the
+   * table structure:
+   *  - 1 cell  → "No data to display" message → returns true (no duplicates)
+   *  - 5 cells → duplicate record found       → returns false
+   *  - Other   → unexpected state             → throws an error
+   */
+  async hasNoDataDisplayed(): Promise<boolean> {
     await this.page.waitForLoadState("load");
     await this.page.waitForLoadState("networkidle");
     await this.page.waitForLoadState("domcontentloaded");
 
+    // The duplicate search runs server-side and can be slow;
+    // wait for results to populate before inspecting the table
     await this.page.waitForTimeout(35_000);
 
-    // Now check the actual state
-    if ((await this.tableFirstRowContent.count()) === 1) {
+    const cellCount = await this.tableFirstRowContent.count();
+
+    if (cellCount === 1) {
       return (
-        (await this.tableFirstRowContent.textContent()) === "No data to display"
+        (await this.tableFirstRowContent.textContent()) ===
+        "No data to display"
       );
-    } else if ((await this.tableFirstRowContent.count()) === 5) {
+    } else if (cellCount === 5) {
       return false;
     } else {
-      throw new Error("Unexpected number of rows in duplicate person modal");
+      throw new Error(
+        `Unexpected number of cells (${cellCount}) in duplicate person modal`
+      );
     }
-  };
+  }
 
-  closeDuplicatePersonModal = async () => {
+  /** Closes the duplicate person modal. */
+  async closeDuplicatePersonModal() {
     await this.closeBtn.click();
-  };
+  }
 }

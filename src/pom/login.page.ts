@@ -1,13 +1,19 @@
+/**
+ * Login Page
+ *
+ * Handles authentication via BAPS SSO.
+ * Credentials are sourced from environment variables (USERNAME / PASSWORD),
+ * set locally via .env or injected through GitHub Actions secrets.
+ */
 import { Locator, Page } from "@playwright/test";
 
-/*
-    Represents Login Page.
- */
 export class LoginPage {
   page: Page;
+
+  // --- Locators ---
   private readonly loginWithBapsSSOBtn: Locator;
-  private readonly loginWithBapsSSOUserName: Locator;
-  private readonly loginWithBapsSSOPassword: Locator;
+  private readonly usernameInput: Locator;
+  private readonly passwordInput: Locator;
   private readonly signInBtn: Locator;
 
   constructor(page: Page) {
@@ -15,47 +21,53 @@ export class LoginPage {
     this.loginWithBapsSSOBtn = this.page.getByRole("button", {
       name: "Click here to login with BAPS",
     });
-    this.loginWithBapsSSOUserName = this.page.locator("#userName");
-    this.loginWithBapsSSOPassword = this.page.locator("#password");
+    this.usernameInput = this.page.locator("#userName");
+    this.passwordInput = this.page.locator("#password");
     this.signInBtn = this.page.getByRole("button", { name: "Sign In" });
   }
 
-  async NavigateToLoginPage() {
+  // --- Actions ---
+
+  /** Clicks the BAPS SSO button and waits for the login form to fully load. */
+  async navigateToLoginPage() {
     await this.loginWithBapsSSOBtn.waitFor({ state: "visible" });
     await this.loginWithBapsSSOBtn.isEnabled();
     await this.loginWithBapsSSOBtn.click();
-    // Wait for the login page to fully load.
-    await this.page.waitForLoadState("load");
-    await this.page.waitForLoadState("networkidle");
-    await this.page.waitForLoadState("domcontentloaded");
+    await this.waitForPageLoad();
   }
 
-  async LoginWithBapsSSO() {
-    // Store Username and Password in GitHub Action Secret and Read to here to user for login.
+  /** Fills credentials and submits the login form, then waits for post-login navigation. */
+  async loginWithBapsSSO() {
     const userName = process.env.USERNAME;
     const password = process.env.PASSWORD;
-    // Login Page takes a while to fully load and processed and especially on Github Actions.
-    // Wait for the login page to fully load.
-    await this.page.waitForLoadState("load");
-    await this.page.waitForLoadState("networkidle");
-    await this.page.waitForLoadState("domcontentloaded");
-    // Wait for the login page to be visible.
-    await this.loginWithBapsSSOUserName.waitFor({ state: "visible" });
-    await this.loginWithBapsSSOPassword.waitFor({ state: "visible" });
-    await this.signInBtn.waitFor({ state: "visible" });
-    // Check they're enabled for interactions.
-    await this.loginWithBapsSSOUserName.isEnabled();
-    await this.loginWithBapsSSOPassword.isEnabled();
-    await this.signInBtn.isEnabled();
-    await this.loginWithBapsSSOUserName.fill(userName);
-    await this.loginWithBapsSSOPassword.fill(password);
 
-    // Use click with noWaitAfter to prevent hanging on navigation
+    // The SSO login page can be slow, especially on GitHub Actions runners
+    await this.waitForPageLoad();
+
+    // Ensure all form elements are interactive before filling
+    await this.usernameInput.waitFor({ state: "visible" });
+    await this.passwordInput.waitFor({ state: "visible" });
+    await this.signInBtn.waitFor({ state: "visible" });
+    await this.usernameInput.isEnabled();
+    await this.passwordInput.isEnabled();
+    await this.signInBtn.isEnabled();
+
+    await this.usernameInput.fill(userName);
+    await this.passwordInput.fill(password);
     await this.signInBtn.click();
 
-    // Now wait for the navigation to complete manually
+    // Post-login navigation can take up to 60s on slow connections
     await this.page.waitForLoadState("load", { timeout: 60_000 });
     await this.page.waitForLoadState("networkidle", { timeout: 60_000 });
     await this.page.waitForLoadState("domcontentloaded", { timeout: 60_000 });
+  }
+
+  // --- Helpers ---
+
+  /** Waits for all page load states to settle. */
+  private async waitForPageLoad() {
+    await this.page.waitForLoadState("load");
+    await this.page.waitForLoadState("networkidle");
+    await this.page.waitForLoadState("domcontentloaded");
   }
 }
